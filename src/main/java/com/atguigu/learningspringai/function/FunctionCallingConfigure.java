@@ -21,7 +21,7 @@ public class FunctionCallingConfigure
     @Description("加法运算")
     public Function<AddOperation, Integer> addOperation() {
         return request -> {
-            System.out.println("加法运算");
+            System.out.println("加法运算执行了");
             return request.a + request.b;
         };
     }
@@ -30,7 +30,7 @@ public class FunctionCallingConfigure
     @Description("乘法运算")
     public Function<MulOperation, Integer> mulOperation() {
         return request -> {
-            System.out.println("乘法运算");
+            System.out.println("乘法运算执行了");
             return request.m * request.n;
         };
     }
