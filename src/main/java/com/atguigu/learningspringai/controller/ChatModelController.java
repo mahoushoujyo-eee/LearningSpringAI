@@ -48,7 +48,8 @@ public class ChatModelController
         return ChatClient.builder(chatModel).build().prompt()
                 .system("你是一个计算专家，可以帮助人们进行计算。")
                 .user(message)
-                .functions("addOperation", "mulOperation")
+                //函数调用处，不过这个方法好像目前被废弃
+                //.functions("addOperation", "mulOperation")
                 .call()
                 .content();
     }

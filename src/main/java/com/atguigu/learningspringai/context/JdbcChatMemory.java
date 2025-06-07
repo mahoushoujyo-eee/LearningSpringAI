@@ -37,19 +37,10 @@ public class JdbcChatMemory implements ChatMemory
     }
 
     @Override
-    public List<Message> get(String conversationId, int lastN) {
-        // 从数据库获取指定会话的最近N条消息
-        List<ChatMessage> chatMessages = chatMessageMapper.getLastNMessages(conversationId, lastN);
-        // 排序：按时间正序显示消息
-        Collections.reverse(chatMessages);
-
-        List<Message> messages = new ArrayList<>();
-        for (ChatMessage chatMessage : chatMessages) {
-            messages.add(chatMessage.getMessage());
-        }
-
-        return messages;
+    public List<Message> get(String conversationId) {
+        return List.of();
     }
+
 
     @Override
     public void clear(String conversationId) {

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
 
 @Slf4j
 @RequestMapping("/chat-memory")
@@ -19,34 +18,20 @@ import java.util.UUID;
 public class ChatMemoryController
 {
     @Autowired
-    JdbcChatMemory jdbcChatMemory;
-
-//    api缺失？不能找到MessageWindowChatMemory
-//    {
-//        ChatMemory chatMemory = MessageWindowChatMemory.builder()
-//                .chatMemoryRepository(jdbcChatMemory)
-//                .maxMessages(10)
-//                .build();
-//    }
-
-    @Autowired
     ChatClient chatClient;
 
     @GetMapping("/chat")
     public String memoryChat(@RequestParam(value = "message",defaultValue = "") String message ,
-                             @RequestParam(value = "userId",defaultValue = "") String userId)
+                             @RequestParam(value = "conversationId",defaultValue = "default") String conversationId)
     {
-        UUID conversationId = UUID.randomUUID();
-
-        log.info("userId:{}",userId);
-        log.info("conversationId:{}",conversationId);
-
+        log.info("userId:{}",conversationId);
 
         String  response = chatClient.prompt()
                 .user(message)
                 //这里的key-value如何配合ChatMemory使用？两个进行都不会影响对话记录
                 //破案了，根本就没使用
-                //.advisors(advisor -> advisor.param(ChatMemory.CONVERSATION_ID,conversationId))
+                //终于找到了常量的位置
+                .advisors(advisor -> advisor.param(ChatMemory.CONVERSATION_ID, conversationId))
                 .call()
                 .content();
 

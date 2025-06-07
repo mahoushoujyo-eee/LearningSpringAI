@@ -18,20 +18,19 @@ public class ChatMemoryConfig {
     public JdbcChatMemoryRepository jdbcChatMemoryRepository(JdbcTemplate jdbcTemplate) {
         return JdbcChatMemoryRepository.builder()
                 .jdbcTemplate(jdbcTemplate)
+                //可以使用JdbcChatMemoryRepositoryDialect.from(datasource)的形式补齐
+                //new MysqlChatMemoryRepositoryDialect()
                 .dialect(new MysqlChatMemoryRepositoryDialect())
                 .build();
     }
 
     @Bean
     public ChatMemory chatMemory(JdbcChatMemoryRepository jdbcChatMemoryRepository) {
-        return RepositoryChatMemory.builder()
+
+        //return MessageWindowChatMemory.builder().build();
+        return MessageWindowChatMemory.builder()
                 .chatMemoryRepository(jdbcChatMemoryRepository)
                 .maxMessages(10) // Configure the maximum number of messages to retain
                 .build();
-    }
-
-    @Bean
-    public MessageChatMemoryAdvisor messageChatMemoryAdvisor(ChatMemory chatMemory) {
-        return new MessageChatMemoryAdvisor(chatMemory);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Description;
 
 import java.util.function.Function;
 
+//函数调用配置类
 @Configuration
 public class FunctionCallingConfigure
 {

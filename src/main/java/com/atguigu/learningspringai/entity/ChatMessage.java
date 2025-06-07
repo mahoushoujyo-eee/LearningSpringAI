@@ -34,6 +34,10 @@ public class ChatMessage implements Message {
         return message.getText();
     }
 
+    public String getContent() {
+        return message.getText();
+    }
+
     @Override
     public Map<String, Object> getMetadata() {
         return message.getMetadata();

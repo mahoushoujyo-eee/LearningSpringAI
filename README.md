@@ -150,7 +150,11 @@ GET http://localhost:8899/chat-memory/chat?message=我们刚才聊了什么&user
 
 1. `JdbcChatMemory` - 基于JDBC的实现，可以将对话记录存储在数据库中
 2. `MyChatMemory` - 自定义实现，可以根据需要扩展
-
+这里有几个核心常量，官方文档里没有介绍，这里给出：
+```java
+import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY;
+import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY;
+```
 ### 函数调用配置
 
 函数调用允许AI模型调用预定义的Java函数。在`FunctionCallingConfigure.java`中定义了两个示例函数：

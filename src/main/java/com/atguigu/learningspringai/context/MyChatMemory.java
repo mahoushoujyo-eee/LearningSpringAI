@@ -19,7 +19,7 @@ public class MyChatMemory implements ChatMemory
     }
 
     @Override
-    public List<Message> get(String conversationId, int lastN) {
+    public List<Message> get(String conversationId) {
         return List.of();
     }
 

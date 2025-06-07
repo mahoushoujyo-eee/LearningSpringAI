@@ -15,6 +15,7 @@ import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.util.Assert;
 
+//重写了一个框架内的类MessageWindowChatMemory
 @Slf4j
 public class RepositoryChatMemory implements ChatMemory 
 {
@@ -43,13 +44,6 @@ public class RepositoryChatMemory implements ChatMemory
         log.info("Memory messages: {}", memoryMessages);
         log.info("Processed messages: {}", processedMessages);
         this.chatMemoryRepository.saveAll(conversationId, processedMessages);
-    }
-
-    @Override
-    public List<Message> get(String conversationId, int lastN) {
-        List<Message> messages = get(conversationId);
-        int actualLimit = Math.min(lastN, messages.size()); // 使用 messages.size() 替代 this.maxMessages
-        return messages.subList(0, actualLimit);
     }
 
 
