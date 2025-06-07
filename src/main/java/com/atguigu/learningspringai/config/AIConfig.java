@@ -18,8 +18,6 @@ public class AIConfig {
 
     @Bean
     public ChatClient chatClient(ChatClient.Builder builder) {
-        // 使用内存聊天记录
-        InMemoryChatMemory chatMemory = new InMemoryChatMemory();
 
         return builder
                 .defaultAdvisors(

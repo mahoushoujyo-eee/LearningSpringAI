@@ -3,6 +3,8 @@ package com.atguigu.learningspringai.controller;
 import com.atguigu.learningspringai.context.JdbcChatMemory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.PromptChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +46,7 @@ public class ChatMemoryController
                 .user(message)
                 //这里的key-value如何配合ChatMemory使用？两个进行都不会影响对话记录
                 //破案了，根本就没使用
-                .advisors(advisor -> advisor.param(userId, conversationId))
+                //.advisors(advisor -> advisor.param(ChatMemory.CONVERSATION_ID,conversationId))
                 .call()
                 .content();
 

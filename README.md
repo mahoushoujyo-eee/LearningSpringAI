@@ -4,6 +4,8 @@
 
 这是一个基于Spring AI框架开发的Java应用程序，用于学习和演示如何集成大型语言模型(LLM)到Spring Boot应用中。项目主要使用Spring AI与OpenAI兼容的API接口进行交互，实现了多种AI对话场景，包括普通对话、流式响应、角色扮演、函数调用以及对话记忆等功能。
 
+##目前官方文档和Maven仓库的依赖都不够完善，很多内容都直接没有任何资料，建议保持观望
+
 ## 技术栈
 
 - Java 17
@@ -25,7 +27,8 @@ src/
 │   │               ├── advisor/
 │   │               │   └── ChatMemoryAdvisor.java         # 对话记忆管理顾问
 │   │               ├── config/
-│   │               │   └── AIConfig.java                  # AI配置类
+│   │               │   ├── AIConfig.java                  # AI配置类
+│   │               │   └── ChatMemoryConfig.java          # 持久对话存储配置
 │   │               ├── context/
 │   │               │   ├── JdbcChatMemory.java            # JDBC对话记忆实现
 │   │               │   └── MyChatMemory.java              # 自定义对话记忆实现
