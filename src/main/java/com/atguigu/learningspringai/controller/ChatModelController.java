@@ -39,7 +39,7 @@ public class ChatModelController
                         .build()
         ));
 
-        return response.getResult().getOutput().getContent();
+        return response.getResult().getOutput().getText();
     }
 
     @GetMapping("/function-calling")
@@ -73,6 +73,6 @@ public class ChatModelController
                 .createMessage(Map.of("name", name, "voice", voice));
         Prompt prompt = new Prompt(List.of(userMessage, systemMessage));
         List<Generation> results = chatModel.call(prompt).getResults();
-        return results.stream().map(x->x.getOutput().getContent()).collect(Collectors.joining(""));
+        return results.stream().map(x->x.getOutput().getText()).collect(Collectors.joining(""));
     }
 }

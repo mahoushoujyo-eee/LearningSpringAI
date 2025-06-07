@@ -8,6 +8,7 @@ class LearningSpringAiApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }
