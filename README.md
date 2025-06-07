@@ -2,17 +2,25 @@
 
 ## 项目介绍
 
-这是一个基于Spring AI框架开发的Java应用程序，用于学习和演示如何集成大型语言模型(LLM)到Spring Boot应用中。项目主要使用Spring AI与OpenAI兼容的API接口进行交互，实现了多种AI对话场景，包括普通对话、流式响应、角色扮演、函数调用以及对话记忆等功能。
-
-##目前官方文档和Maven仓库的依赖都不够完善，很多内容都直接没有任何资料，建议保持观望
+这是一个基于 Spring AI 框架开发的 Java 应用程序，用于学习和演示如何集成大型语言模型(LLM)到 Spring Boot 应用中。项目主要使用 Spring AI 与 OpenAI 兼容的 API 接口进行交互，实现了多种 AI 对话场景，包括普通对话、流式响应、角色扮演、函数调用以及对话记忆等功能。
 
 ## 技术栈
 
 - Java 17
-- Spring Boot 3.5.0
-- Spring AI 1.0.0-M5
-- OpenAI兼容API
-- Spring JDBC (用于对话记忆存储)
+- Spring Boot 3.4.6
+- Spring AI 1.0.0
+- MySQL (用于对话记忆存储)
+- MyBatis
+- Redis
+
+## 功能特性
+
+- **基础对话**: 通过 ChatClient 实现与 LLM 的基本对话功能
+- **流式响应**: 支持流式返回大模型回答，提升用户体验
+- **角色扮演**: 通过角色提示词实现特定角色的对话场景
+- **函数/工具调用**: 支持调用外部函数或服务，增强 AI 能力
+- **对话记忆**: 基于 JDBC 的持久化对话记忆，支持多会话管理
+- **多渠道配置**: 支持多种 AI 服务提供商的配置接入
 
 ## 项目结构
 
@@ -24,168 +32,102 @@ src/
 │   │       └── atguigu/
 │   │           └── learningspringai/
 │   │               ├── LearningSpringAiApplication.java   # 应用程序入口
-│   │               ├── advisor/
+│   │               ├── advisor/                           # 对话顾问相关类
 │   │               │   └── ChatMemoryAdvisor.java         # 对话记忆管理顾问
-│   │               ├── config/
-│   │               │   ├── AIConfig.java                  # AI配置类
-│   │               │   └── ChatMemoryConfig.java          # 持久对话存储配置
-│   │               ├── context/
+│   │               ├── config/                            # 配置类
+│   │               │   ├── AIConfig.java                  # AI 基础配置
+│   │               │   ├── ChatMemoryConfig.java          # 对话记忆配置
+│   │               │   └── OneMCPConfig.java              # MCP配置
+│   │               ├── context/                           # 上下文管理
 │   │               │   ├── JdbcChatMemory.java            # JDBC对话记忆实现
-│   │               │   └── MyChatMemory.java              # 自定义对话记忆实现
-│   │               ├── controller/
-│   │               │   ├── ChatController.java            # 基础聊天控制器
+│   │               │   ├── MyChatMemory.java              # 自定义对话记忆实现
+│   │               │   └── RepositoryChatMemory.java      # 存储库对话记忆实现
+│   │               ├── controller/                        # 控制器
+│   │               │   ├── ChatController.java            # 基础对话控制器
 │   │               │   ├── ChatMemoryController.java      # 对话记忆控制器
-│   │               │   ├── ChatModelController.java       # 更高级的聊天模型控制器
-│   │               │   └── RoleChatController.java        # 角色扮演聊天控制器
-│   │               └── function/
-│   │                   └── FunctionCallingConfigure.java  # 函数调用配置
+│   │               │   ├── ChatModelController.java       # 聊天模型控制器
+│   │               │   ├── MCPController.java             # MCP控制器
+│   │               │   ├── RoleChatController.java        # 角色对话控制器
+│   │               │   └── ToolChatController.java        # 工具对话控制器
+│   │               ├── entity/                            # 实体类
+│   │               │   └── ChatMessage.java               # 聊天消息实体
+│   │               ├── function/                          # 函数调用相关
+│   │               │   └── FunctionCallingConfigure.java  # 函数调用配置
+│   │               ├── mapper/                            # MyBatis Mapper
+│   │               ├── mcp/                               # MCP 相关
+│   │               │   └── MyMCPService.java              # MCP服务实现
+│   │               └── tool/                              # 工具类
+│   │                   └── ToolTest.java                  # 工具测试类
 │   └── resources/
-│       └── application.properties                         # 应用配置文件
+│       ├── application.properties                         # 应用配置
+│       ├── mapper/                                        # MyBatis映射文件
+│       │   └── ChatMessageMapper.xml                      # 聊天消息映射
+│       └── mcp/
+│           └── fetch-web.json                             # MCP配置文件
+└── test/
+    └── java/
+        └── com/
+            └── atguigu/
+                └── learningspringai/
+                    └── LearningSpringAiApplicationTests.java  # 测试类
 ```
 
-## 功能特性
+## 快速开始
 
-1. **基础聊天功能**
-   - 普通对话响应
-   - 流式响应输出
+### 环境要求
 
-2. **高级聊天功能**
-   - 模型参数自定义配置
-   - 提示词模板使用
-   - 系统消息定制
+- JDK 17 或更高版本
+- Maven 3.8+
+- MySQL 8.0+
+- Redis (可选)
 
-3. **函数调用功能**
-   - 加法运算函数
-   - 乘法运算函数
+### 配置说明
 
-4. **角色扮演**
-   - 自定义AI角色
-
-5. **对话记忆功能**
-   - 基于JDBC的对话历史存储
-   - 自定义对话记忆实现
-
-## API接口说明
-
-### 基础聊天接口
-
-- **普通对话**: `/ai/chat/1?message=消息内容`
-- **流式响应**: `/ai/stream/chat?message=消息内容`
-- **模型直接调用**: `/ai/generate/1?message=消息内容`
-
-### 高级聊天接口
-
-- **角色扮演**: `/ai/role/chat/1?message=消息内容`
-- **函数调用**: `/chat-model/function-calling?message=消息内容`
-- **提示词模板**: `/chat-model/prompt?name=名称&voice=声音风格`
-
-### 对话记忆接口
-
-- **带记忆的对话**: `/chat-memory/chat?message=消息内容&userId=用户ID`
-
-### 其他接口
-
-- **自定义模型调用**: `/chat-model/chat/1?message=消息内容`
-
-## 配置说明
-
-项目配置文件`application.properties`中包含以下主要配置：
+1. 在 `application.properties` 中配置你的 AI 服务提供商信息：
 
 ```properties
-server.port=8899
-
-# API密钥和基础URL配置
-spring.ai.openai.api-key=您的API密钥
-spring.ai.openai.base-url=https://api.qnaigc.com
-
-# 模型和参数配置
-spring.ai.openai.chat.options.model=deepseek-v3
+# OpenAI 配置
+spring.ai.openai.api-key=你的API密钥
+spring.ai.openai.base-url=你的API地址
+spring.ai.openai.chat.options.model=模型名称
 spring.ai.openai.chat.options.temperature=0.7
 
-# 防止Spring Boot 3.4+ HTTP客户端工厂bug影响AI功能
-spring.http.client.factory=jdk
+# 数据库配置
+spring.datasource.url=jdbc:mysql://localhost:3306/spring_ai?useSSL=false&serverTimezone=UTC&characterEncoding=utf-8
+spring.datasource.username=root
+spring.datasource.password=你的密码
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# MyBatis 配置
+mybatis.mapper-locations=classpath:mapper/*.xml
+mybatis.type-aliases-package=com.atguigu.learningspringai.entity
+mybatis.configuration.map-underscore-to-camel-case=true
 ```
 
-## 如何启动
+2. 创建 MySQL 数据库和必要的表结构
 
-1. 确保已安装Java 17或以上版本
-2. 克隆项目到本地
-3. 修改`application.properties`文件中的API密钥为您自己的密钥
-4. 使用以下命令运行项目：
+### 运行项目
 
-```bash
-./mvnw spring-boot:run
-```
+1. 克隆代码库
+2. 进入项目根目录
+3. 执行 `mvn spring-boot:run`
+4. 访问 `http://localhost:8899` 开始使用
 
-或者在IDE中直接运行`LearningSpringAiApplication.java`
+## API 接口
 
-## 使用示例
-
-### 基础聊天
-```
-GET http://localhost:8899/ai/chat/1?message=给我讲个笑话
-```
-
-### 函数调用
-```
-GET http://localhost:8899/chat-model/function-calling?message=计算3加5等于多少
-```
-
-### 提示词模板
-```
-GET http://localhost:8899/chat-model/prompt?name=美食专家&voice=专业
-```
-
-### 对话记忆
-```
-GET http://localhost:8899/chat-memory/chat?message=你好&userId=user123
-GET http://localhost:8899/chat-memory/chat?message=我们刚才聊了什么&userId=user123
-```
-
-## 开发说明
-
-### 对话记忆功能
-
-项目中的对话记忆功能允许AI模型记住与特定用户的对话历史。目前有两种实现：
-
-1. `JdbcChatMemory` - 基于JDBC的实现，可以将对话记录存储在数据库中
-2. `MyChatMemory` - 自定义实现，可以根据需要扩展
-这里有几个核心常量，官方文档里没有介绍，这里给出：
-```java
-import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY;
-import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY;
-```
-### 函数调用配置
-
-函数调用允许AI模型调用预定义的Java函数。在`FunctionCallingConfigure.java`中定义了两个示例函数：
-
-1. `addOperation` - 执行加法运算
-2. `mulOperation` - 执行乘法运算
-
-要添加新的函数：
-1. 在`FunctionCallingConfigure`类中定义新的record类型
-2. 添加带有`@Bean`和`@Description`注解的函数实现
-3. 在控制器中通过`.functions()`方法调用新添加的函数
+- 基础对话：`/ai/chat`
+- 流式响应：`/ai/stream`
+- 角色对话：`/role-chat`
+- 带记忆的对话：`/chat-memory/chat?conversationId={会话ID}`
+- 函数调用：`/tool/chat`
 
 ## 注意事项
 
-- 项目使用的是OpenAI兼容API，当前配置使用的是通过`api.qnaigc.com`访问的`deepseek-v3`模型
-- 请确保您的API密钥有效且有足够的调用额度
-- 默认运行端口为8899，可在配置文件中修改
-- 由于Spring Boot 3.4中的bug，添加了`spring.http.client.factory=jdk`配置，以避免某些AI功能（如ImageModel）出现问题
+- 请确保已配置正确的 API 密钥和基础 URL
+- 对话记忆功能需要正确配置数据库
+- 流式响应接口需要支持服务端事件推送 (SSE)
 
-## 扩展开发
+## 参考资料
 
-### 对话记忆存储扩展
-要实现自定义的对话记忆存储，可以：
-1. 实现`ChatMemory`接口
-2. 覆盖必要的方法，如`add()`、`get()`和`clear()`
-3. 通过Spring配置使其可用于注入
-
-### 模型切换
-项目支持切换不同的AI模型，只需在配置中修改：
-```properties
-spring.ai.openai.chat.options.model=您选择的模型
-```
-
-或在代码中通过`OpenAiChatOptions`动态指定。
+- [Spring AI 官方文档](https://docs.spring.io/spring-ai/reference/index.html)
+- [Spring Boot 官方文档](https://docs.spring.io/spring-boot/docs/current/reference/html/)

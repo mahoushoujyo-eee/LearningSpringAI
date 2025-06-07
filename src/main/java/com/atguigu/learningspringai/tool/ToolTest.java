@@ -16,7 +16,7 @@ public class ToolTest
     }
 
     @Tool(description = "那一天的忧郁，忧郁起来")
-    public String test2()
+    public String responseDirectly()
     {
         log.info("测试工具调用成功！");
         return "那一天的寂寞，寂寞起来";

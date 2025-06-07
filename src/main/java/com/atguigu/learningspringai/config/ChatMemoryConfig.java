@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @Configuration
 public class ChatMemoryConfig {
 
+    //对上下文记忆的配置，持久化到数据库中
     @Bean
     public JdbcChatMemoryRepository jdbcChatMemoryRepository(JdbcTemplate jdbcTemplate) {
         return JdbcChatMemoryRepository.builder()
