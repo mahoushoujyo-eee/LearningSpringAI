@@ -29,4 +29,15 @@ class LearningSpringAiApplicationTests {
         ragService.query("那一天的忧郁");
     }
 
+    @Test
+    void checkPdf() throws IOException {
+        ragService.checkPdf("pdf/springai.pdf");
+        //ragService.readPdfAsDocument("C:\\File\\CS\\Java\\LearningSpringAI\\src\\main\\resources\\docs\\pdf\\springai.pdf");
+    }
+
+    @Test
+    void addPdf() throws IOException {
+        ragService.addPdfToVectorStore("pdf/springai.pdf");
+    }
+
 }

@@ -1,26 +1,22 @@
 package com.atguigu.learningspringai.rag;
 
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.EmbeddingModel;
+import org.springframework.ai.reader.ExtractedTextFormatter;
 import org.springframework.ai.reader.TextReader;
+import org.springframework.ai.reader.pdf.PagePdfDocumentReader;
+import org.springframework.ai.reader.pdf.config.PdfDocumentReaderConfig;
 import org.springframework.ai.transformer.splitter.TextSplitter;
-import org.springframework.ai.transformer.splitter.TokenTextSplitter;
-import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class RagService {
@@ -39,11 +35,7 @@ public class RagService {
 
 
 
-    /**
-     * 从resources/documents目录加载文档并添加到向量存储
-     * @param filename 文件名
-     * @throws IOException 如果文件读取失败
-     */
+    //直接往向量存储中添加文本文件
     public void addDocumentFromResources(String filename) throws IOException {
         // 构建完整的资源路径
         Resource documentResource = documentsDirectory.createRelative(filename);
@@ -64,8 +56,8 @@ public class RagService {
         System.out.println("成功从resources加载并添加文档: " + filename);
     }
 
+    //添加文字内容
     public void addDocumentToVectorStore(String content, String documentName) {
-        // 1. 加载文档 (这里简化为直接传入内容)
         Document document = new Document(content);
         document.getMetadata().put("name", documentName);
 
@@ -88,5 +80,75 @@ public class RagService {
             System.out.println("No documents found.");
     }
 
-    // ... existing code ...
+    //添加pdf文件到向量库中
+    public void addPdfToVectorStore(String documentName) throws IOException
+    {
+        Resource documentResource = documentsDirectory.createRelative(documentName);
+        List<Document> documents = readPdfAsDocument(documentResource.getFile().getAbsolutePath());
+        if (documents != null)
+        {
+            System.out.println("Reading PDF: " + documentName);
+        }
+        else
+        {
+            System.out.println("No documents found.");
+            return;
+        }
+        for (Document document : documents) {
+            System.out.println("Document: " + document.getText());
+            addDocumentToVectorStore(document.getText(), documentName);
+        }
+
+        System.out.println("Document '" + documentName + "' added to vector store.");
+    }
+
+    //检查读取pdf文件
+    public void checkPdf(String documentName) throws IOException
+    {
+        Resource documentResource = documentsDirectory.createRelative(documentName);
+        if (!documentResource.exists()) {
+            throw new IOException("文件不存在: " + documentName);
+        }
+
+        List<Document> documents = readPdfAsDocument(documentResource.getFile().getAbsolutePath());
+        for (Document document : documents) {
+            System.out.println("Document: " + document.getText());
+        }
+    }
+
+    //读取pdf文件为Document对象，辅助方法
+    public List<Document> readPdfAsDocument(String filePath) {
+        ExtractedTextFormatter extractedTextFormatter = ExtractedTextFormatter
+                .builder()
+                .withNumberOfTopTextLinesToDelete(0)
+                .build();
+
+        PdfDocumentReaderConfig pdfDocumentReaderConfig = PdfDocumentReaderConfig
+                .builder()
+                .withPageTopMargin(0)
+                .withPageExtractedTextFormatter(extractedTextFormatter)
+                .withPagesPerDocument(13)
+                .build();
+
+        PagePdfDocumentReader pdfReader = getPagePdfDocumentReader(filePath, pdfDocumentReaderConfig);
+
+        return pdfReader.read();
+    }
+
+    //创建PagePdfDocumentReader对象
+    private static PagePdfDocumentReader getPagePdfDocumentReader(String filePath, PdfDocumentReaderConfig pdfDocumentReaderConfig) {
+        PagePdfDocumentReader pdfReader;
+        try {
+            // 如果是绝对路径，使用file:前缀
+            if (new File(filePath).isAbsolute()) {
+                pdfReader = new PagePdfDocumentReader("file:" + filePath, pdfDocumentReaderConfig);
+            } else {
+                // 如果是相对路径，当作classpath资源处理
+                pdfReader = new PagePdfDocumentReader("classpath:" + filePath, pdfDocumentReaderConfig);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("无法读取PDF文件: " + filePath, e);
+        }
+        return pdfReader;
+    }
 }

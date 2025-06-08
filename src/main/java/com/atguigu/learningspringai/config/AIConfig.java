@@ -18,7 +18,6 @@ public class AIConfig {
     @Autowired
     private VectorStore  vectorStore;
 
-
     //利用一个配置类来完成ChatClient的配置，包括上下文记忆、提示词、RAG等
     @Bean
     public ChatClient chatClient(ChatClient.Builder builder) {
