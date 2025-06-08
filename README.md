@@ -3,7 +3,7 @@
 ## 项目介绍
 
 这是一个基于 Spring AI 框架开发的 Java 应用程序，用于学习和演示如何集成大型语言模型(LLM)到 Spring Boot 应用中。项目主要使用 Spring AI 与 OpenAI 兼容的 API 接口进行交互，实现了多种 AI 对话场景，包括普通对话、流式响应、角色扮演、函数调用以及对话记忆等功能。同时项目使用了阿里云百炼的Embedding模型。
-这里面是各种SpringAI框架的使用示例，建议搭配飞书介绍文档：[SpringAI 上手开发(https://ycn0a41n7m9n.feishu.cn/wiki/NgNFwxXUsih4uPktoRVc2CZ2nSf)，进行学习。
+这里面是各种SpringAI框架的使用示例，建议搭配飞书介绍文档：[SpringAI 上手开发](https://ycn0a41n7m9n.feishu.cn/wiki/NgNFwxXUsih4uPktoRVc2CZ2nSf)，进行学习。
 
 ## 技术栈
 
